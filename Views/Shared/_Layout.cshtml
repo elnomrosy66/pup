@@ -1,0 +1,275 @@
+﻿<!DOCTYPE html >
+<html dir="rtl" lang="ar-eg">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    @Styles.Render("~/Content/css")
+</head>
+<body class="hold-transition layout-top-nav">
+    <div class="wrapper">
+
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
+            <div class="container">
+                <a href="/" class="navbar-brand">
+                    <img src="../../dist/img/AdminLTELogo.png" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <span class="brand-text font-weight-light">الفاتورة الإلكترونية</span>
+                </a>
+
+                <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+                    <!-- Left navbar links -->
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <div class="dropdown">
+                                <a class="nav-link nav-head">الرئيسية</a>
+                                <ul class="dropdown-content navbar-nav ">
+                                    <li>@Html.ActionLink("بيانات المستشفي", "Index", "company", null, new { @class = "nav-link" })</li>
+                                    <li>@Html.ActionLink("الجهات المتعاقدة", "Index", "contact", null, new { @class = "nav-link" })</li>
+                                    <li>@Html.ActionLink("مجموعات الخدمات", "Index", "category", null, new { @class = "nav-link" })</li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <div class="dropdown">
+                                <a class="nav-link nav-head">البنود</a>
+                                <ul class="dropdown-content navbar-nav ">
+                                    <li>@Html.ActionLink("مرضي داخلي", "Index", "InPInvoice", null, new { @class = "nav-link" })</li>
+                                    <li>@Html.ActionLink("سندات خارجي", "Index", "OtDInvoice", null, new { @class = "nav-link" })</li>
+                                    <li>@Html.ActionLink("مبيعات ادوية خ", "Index", "OtMInvoice", null, new { @class = "nav-link" })</li>
+                                    <li>@Html.ActionLink("مبيعات ادوية نقدي", "Index", "CMInvoice", null, new { @class = "nav-link" })</li>
+                                    <li><hr></li>
+                                    <li>@Html.ActionLink("سطور ف م غير مكتملة", "stat1notcompleted", "InPInvoice", null, new { @class = "nav-link" })</li>
+                                    <li><hr></li>
+                                    <li>@Html.ActionLink("تغير فاتورة م تعاقد لنقدى", "GetPaiedCashIP", "InPInvoice", null, new { @class = "nav-link" })</li>
+                                    
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="nav-item">
+                            <div class="dropdown">
+                                <a class="nav-link nav-head">الفواتير</a>
+                                <ul class="dropdown-content navbar-nav ">
+                                    <li>@Html.ActionLink("ارسال الفواتير", "Index", "inv", null, new { @class = "nav-link" })</li>
+                                    <li>@Html.ActionLink("فواتير غير مقبولة", "Index", "inv", new { stat = "NotValid" }, new { @class = "nav-link" })</li>
+                                    <li><hr /></li>
+                                    <li>@Html.ActionLink(" إشعارات الخصم(دائن)", "invtoreturn", "inv", null, new { @class = "nav-link" })</li>
+                                    <li>@Html.ActionLink(" إرسال إشعارات الخصم", "creditnotes", "inv", null, new { @class = "nav-link" })</li>
+                                    <li>@Html.ActionLink(" إشعارات الإضافة(مدين)", "Index", "home", null, new { @class = "nav-link" })</li>
+                                    <li>@Html.ActionLink(" إرسال إشعارات الإضافة", "Index", "home", null, new { @class = "nav-link" })</li>
+                                    <li><hr /></li>
+                                    <li>@Html.ActionLink("فواتير واردة", "getrecieveddocs", "inv", null, new { @class = "nav-link" })</li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                        </li>
+                        <li class="nav-item">
+                            <div class="dropdown">
+                                <a class="nav-link nav-head">التحكم</a>
+                                <ul class="dropdown-content navbar-nav ">
+                                    <li class="nav-item">
+                                        @Html.ActionLink("مزامنة الفواتير", "getdocs", "inv", null, new { @class = "nav-link" })
+                                    <li>@Html.ActionLink("الغاء فواتير مرسلة", "cancledoc", "inv", null, new { @class = "nav-link" })</li>
+                                    <li>@Html.ActionLink("تعديل تاريخ فاتورة", "invchangedate", "inv", null, new { @class = "nav-link" })</li>
+                                </li>
+                    </ul>
+                </div>
+                </li>
+
+                <li class="nav-item">
+                    <div class="dropdown">
+                        <a class="nav-link nav-head">التقارير</a>
+                        <ul class="dropdown-content navbar-nav ">
+                            <li class="dropdown1">
+                                <div>
+                                    <a class="nav-link nav-head">البيانات الاساسية</a>
+                                    <ul class="dropdown-content1 navbar-nav ">
+                                        <li>@Html.ActionLink("الجهات المتعاقدة", "contact", "report", null, new { @class = "nav-link", target = "_blank" })</li>
+                                        <li>@Html.ActionLink("جهات بدون تسجيل ضريبي", "contactwttaxreg", "report", null, new { @class = "nav-link", target = "_blank" })</li>
+                                        <li> <hr /> </li>
+                                        <li>@Html.ActionLink("مجموعات الخدمات", "catrep", "report", null, new { @class = "nav-link", target = "_blank" })</li>
+                                        <li>@Html.ActionLink("مجموعات بدون تكويد", "catrepwtinit", "report", null, new { @class = "nav-link", target = "_blank" })</li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="">
+                                <div class=" dropdown2" style="width:100%;">
+                                    <a class="nav-link nav-head">الفواتير</a>
+                                    <ul class="dropdown-content2 navbar-nav ">
+                                        <li>@Html.ActionLink("جاهز للإرسال", "inv", "report", null, new { @class = "nav-link", target = "_blank" })</li>
+                                        <li>@Html.ActionLink("تحت الإستلام", "invSending", "report", null, new { @class = "nav-link", target = "_blank" })</li>
+                                        <li>@Html.ActionLink("مرسل", "invSent", "report", null, new { @class = "nav-link", target = "_blank" })</li>
+                                        <li>@Html.ActionLink("بنود سالبة مرفوضة", "st1WNA", "report", null, new { @class = "nav-link", target = "_blank" })</li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="">
+                                <div class=" dropdown2" style="width:100%;">
+                                    <a class="nav-link nav-head">ح مرضي</a>
+                                    <ul class="dropdown-content2 navbar-nav ">
+                                        <li>@Html.ActionLink("حالات م داخلي لها خصم سالب", "PWNA", "report", null, new { @class = "nav-link", target = "_blank" })</li>
+                                        <li> <hr /> </li>
+                                        <li>@Html.ActionLink("حالات تم تحويلها لنقدي", "GlToCash", "report", null, new { @class = "nav-link", target = "_blank" })</li>
+                                        <li><hr></li>
+                                        <li>@Html.ActionLink("فواتير مخزون خ على ح/ غير تعاقدية", "OtMOnCash", "report", null, new { @class = "nav-link" })</li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li><a href="#" id="continv" class="nav-link nav-head">مطالبة</a></li>
+                        </ul>
+                    </div>
+                </li>
+                </ul>
+            </div>
+            <!-- Right navbar links -->
+            <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+                <!-- Notifications Dropdown Menu -->
+                <li class="nav-item">
+                    @Html.ActionLink("خروج", "Logout", "Login", null, new { @class = "nav-" }) <span id="user-name-einv"></span>
+                </li>
+            </ul>
+    </div>
+    </nav>
+    <!-- /.navbar -->
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container">
+                <!-- tip ->> write content header -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+        <!-- Main content -->
+        <div class="content">
+            <div class="container">
+                <!-- tip ->>> write content here -->
+                @RenderBody()
+                <div style="text-align:right" class="modal fade  " id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">مطالبة</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div id="ModalBody" class="modal-body">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- Main Footer -->
+    <footer class="main-footer">
+        <!-- To the right -->
+        <div class="float-right d-none d-sm-inline">
+            H-Invoice v2.0.0 - 12-05-2022
+        </div>
+        <!-- Default to the left -->
+        <strong>Copyright &copy; 2022 <a href="#">Ideal Systems</a>.</strong> All rights reserved.
+    </footer>
+    </div>
+
+
+
+    @Scripts.Render("~/bundles/modernizr")
+
+    @Scripts.Render("~/bundles/jquery")
+
+    @Scripts.Render("~/bundles/bootstrap")
+
+    @Scripts.Render("~/adminlte/js")
+
+    @Scripts.Render("~/alerts/js")
+
+    <script src="../../plugins/sweetalert2/sweetalert2.min.js"></script>
+    <!-- Toastr -->
+
+    <script src="../../plugins/toastr/toastr.min.js"></script>
+    <script src="~/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <script src="~/plugins/js-cookie/dist/js.cookie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script>
+
+        $(function () {
+
+
+            $('.datetimepicker5').datepicker({
+                format: 'yyyy/mm/dd',
+                inline: true,
+                lang: 'ar'
+            });
+            
+
+
+            $('#continv').on('click', function () {
+                $.ajax({
+                    async: true,
+                    type: 'GET',
+                    dataType: "html",
+                    contentType: 'application/json; charset=utf-8',
+                    url: "/Home/continv",
+                    success: function (response) {
+                        $('#ModalBody').html(response);
+                        $('#exampleModal').modal('show');
+                        dt.ajax.reload(null, false);
+
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+
+                });
+            });
+
+
+
+        });
+
+
+        $(document).ready(function () {
+            if (Cookies.get("user-name-einv") != null) {
+                
+                $("#user-name-einv").text(Cookies.get("user-name-einv"));
+            }
+                var Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+
+                var toster = "@TempData["toster"]";
+                if (toster != null && toster != '')
+                {
+                    Toast.fire({
+                        icon: '@TempData["tosterIcon"]',
+                        title: '@TempData["tosterMsg"]'
+                    })
+                }
+        });
+
+    </script>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,228 @@
+﻿@model IEnumerable<H_Invoice.Models.CONTACT>
+@{
+    ViewBag.Title = "التعاقدات";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title">التعاقدات</h1>
+        
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-hover table-responsive ">
+            <thead>
+                <tr>
+                    <th>
+                        <label>كود التعاقد</label>
+                    </th>
+                    <th>
+                        <label>اسم التعاقد</label>
+                    </th>
+                    <th>
+                        <label>اسم الشركة</label>
+                    </th>
+                    <th>
+                        <label>كود الدولة</label>
+                    </th>
+                    <th>
+                        <label>المحافظة</label>
+                    </th>
+                    <th>
+                        <label>الحي/المدينة</label>
+                    </th>
+                    <th>
+                        <label>الشارع</label>
+                    </th>
+                    <th>
+                        <label>رقم لمبني</label>
+                    </th>
+                    
+
+
+                    <th>
+                        <label>السجل الضريبي</label>
+                    </th>
+                    <th>
+                        <label>الشكل القانوني</label>
+                    </th>
+                    
+                    
+                    
+                    <th>
+                        <label>ملاحظات</label>
+                    </th>
+                    <th>
+                        عمليات
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CONT)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GL_NAME)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.country)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.govm)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.city)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.st)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.bkdg_no)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PHONE)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CONTACT)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FAX)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.mobile)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.taxreg)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.legal_type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CR)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.tax_no3)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.tax_no2)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.rem2)
+                    </td>
+                        
+                    <td>
+                        @Html.ActionLink(" ", "edit", new { id = item.ser }, new { Class = "fa fa-edit" })
+                        @Html.ActionLink(" ", "delete", new { id = item.ser }, new { Class = "fa fa-trash fa-danger", Style = "color:red;" })
+                    </td>
+                </tr>
+                }
+
+            </tbody>
+            <!--<tfoot>
+                <tr>
+                    <th>
+                        <label>الكود</label>
+                    </th>
+                    <th>
+                        <label>الاسم</label>
+                    </th>
+                    <th>
+                        <label>العنوان</label>
+                    </th>
+                    <th>
+                        <label>التليفون</label>
+                    </th>
+                    <th>
+                        <label>التواصل</label>
+                    </th>
+                    <th>
+                        <label>الفاكس</label>
+                    </th>
+                    <th>
+                        <label>الموبايل</label>
+                    </th>
+                    <th>
+                        <label>الايميل</label>
+                    </th>
+                    <th>
+                        <label>السجل الضريبي</label>
+                    </th>
+                    <th>
+                        <label>الشكل القانوني</label>
+                    </th>
+                    <th>
+                        <label>رقم السجل التجاري</label>
+                    </th>
+                    <th>
+                        <label>مأمورية الضرائب</label>
+                    </th>
+                    <th>
+                        <label>ملف الضرائب</label>
+                    </th>
+                    <th>
+                        <label>ملاحظات</label>
+                    </th>
+                    <th>
+                        عمليات
+                    </th>
+                </tr>
+            </tfoot>-->
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>
+
+@section scripts {
+    @Scripts.Render("~/jqueryDatatable/js")
+    <script>
+        $(function () {
+            $("#example1").DataTable({
+                "columnDefs": [{ targets: 0, className: "ttxt" },
+                { targets: 1, className: "ttxt" },
+                { targets: 2, className: "ttxt" },
+                { targets: 3, className: "ttxt" },
+                { targets: 4, className: "ttxt" },
+                { targets: 5, className: "ttxt" },
+                { targets: 6, className: "ttxt" },
+                { targets: 7, className: "ttxt" },
+                { targets: 8, className: "ttxt" },
+                { targets: 9, className: "ttxt" },
+                { targets: 10, className: "ttxt" },
+                { targets: 11, className: "ttxt" },
+                { targets: 12, className: "ttxt" },
+                { targets: 13, className: "ttxt" },
+                    { targets: 14, className: "ttxt" },
+                    { targets: 15, className: "ttxt" },
+                    { targets: 16, className: "ttxt" },
+                    { targets: 17, className: "ttxt" },
+                    { targets: 18, className: "ttxt" },
+
+                ],
+                "responsive": false,
+                "lengthChange": false,
+                "autoWidth": false,
+                "searching": false,
+                "bPaginate": false,
+                "bInfo": false
+                //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+
+            });//.buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+
+
+
+        });
+    </script>
+}
+

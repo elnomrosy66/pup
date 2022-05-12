@@ -1,0 +1,109 @@
+﻿@model H_Invoice.Models.COMPANY
+@{
+    ViewBag.Title = "edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card ">
+    <div class="card-header">
+        <h3 class="card-title">بيانات المستشفي</h3>
+    </div>
+    <div class="card-body " style="text-align:right;">
+        <form method="post" action="/company/edit" class="form">
+            <div class="row">
+                <div class="col-md-6">
+                    <input hidden type="text" name="ser" id="ser" class="form-control" value="@Model.ser" />
+
+                    <div class="form-group row">
+
+                        <div class="col-md-3 "><label>اسم الشركة</label></div>
+                        <div class="col-md-9 "><input type="text" name="CO_NAME_A" id="CO_NAME_A" class="form-control" value="@Model.CO_NAME_A" /></div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3 "><label>كود الدولة</label></div>
+                        <div class="col-md-9 "><input required type="text" name="country" id="country" class="form-control d-inline" value="@Model.country" /></div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3 d-inline"><label>المحافظة</label></div>
+                        <div class="col-md-9 d-inline"><input type="text" name="tax_gov" id="tax_gov" class="form-control d-inline" value="@Model.tax_gov" /></div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3 d-inline"><label>المدينة</label></div>
+                        <div class="col-md-9 d-inline"><input required type="text" name="tax_city" id="city" class="form-control d-inline" value="@Model.tax_city" /></div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3 d-inline"><label>الشارع</label></div>
+                        <div class="col-md-9 d-inline"><input required type="text" name="tax_st" id="st" class="form-control d-inline " value="@Model.tax_st" /></div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3 d-inline"><label>رقم المبني</label></div>
+                        <div class="col-md-9 d-inline"><input required type="text" name="tax_build_no" id="bkdg_no" class="form-control d-inline " value="@Model.tax_build_no" /></div>
+                    </div>
+
+
+                    <div class="form-group row">
+                        <div class="col-md-3 d-inline"><label> الهاتف</label></div>
+                        <div class="col-md-9 d-inline"><input type="text" name="CO_PHON_E" id="CO_PHON_E" class="form-control d-inline " value="@Model.CO_PHON_E" /></div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3 d-inline"><label>الايميل</label></div>
+                        <div class="col-md-9 d-inline"><input type="email" name="CO_ADD2_A" id="CO_ADD2_A" class="form-control d-inline " value="@Model.CO_ADD2_A" /></div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <div class="col-md-3 d-inline"><label>التسجيل الضريبي</label></div>
+                        <div class="col-md-9 d-inline"><input type="text" name="co_tax_reg" id="co_tax_reg" class="form-control d-inline " value="@Model.co_tax_reg" /></div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3 d-inline"><label>الشكل القانوني</label></div>
+                        <div class="col-md-9 d-inline"><input type="text" name="tax_typ" id="tax_typ" class="form-control d-inline " value="@Model.tax_typ" /></div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3 d-inline"><label>كود النشاط</label></div>
+                        <div class="col-md-9 d-inline"><input type="text" name="tax_act_code" id="tax_act_code" class="form-control d-inline " value="@Model.tax_act_code" /></div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 d-inline"><label>branch_id</label></div>
+                        <div class="col-md-9 d-inline"><input  type="text" name="tax_br" id="tax_br" class="form-control d-inline " value="@Model.tax_br" /></div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 d-inline"><label>client_id</label></div>
+                        <div class="col-md-9 d-inline"><input type="text" name="tax_client_id" id="tax_client_id" class="form-control d-inline " value="@Model.tax_client_id" /></div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 d-inline"><label>client_secret</label></div>
+                        <div class="col-md-9 d-inline"><input type="password" name="tax_client_secret" id="tax_client_secret" class="form-control d-inline " value="@Model.tax_client_secret" /></div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-lg-12 d-inline" style="text-align:left; padding-left:40px;">
+                            <input type="submit" value="حفظ" class="form-control btn btn-success" />
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </form>
+
+    </div>
+    <!-- /.card-body -->
+</div>
+
+<div>
+    @Html.ActionLink("عودة", "Index")
+</div>
+
+
+

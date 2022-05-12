@@ -1,0 +1,116 @@
+﻿@model H_Invoice.Models.command
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Create</title>
+</head>
+<body>
+    @using (Html.BeginForm()) 
+    {
+        @Html.AntiForgeryToken()
+        
+        <div class="form-horizontal">
+            <h4>command</h4>
+            <hr />
+            @Html.ValidationSummary(true)
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.id_user, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.id_user)
+                    @Html.ValidationMessageFor(model => model.id_user)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.id_form, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.id_form)
+                    @Html.ValidationMessageFor(model => model.id_form)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.form_name, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.form_name)
+                    @Html.ValidationMessageFor(model => model.form_name)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.showform, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.showform)
+                    @Html.ValidationMessageFor(model => model.showform)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.cmdadd, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.cmdadd)
+                    @Html.ValidationMessageFor(model => model.cmdadd)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.cmddelete, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.cmddelete)
+                    @Html.ValidationMessageFor(model => model.cmddelete)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.cmdedit, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.cmdedit)
+                    @Html.ValidationMessageFor(model => model.cmdedit)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.cmdprint, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.cmdprint)
+                    @Html.ValidationMessageFor(model => model.cmdprint)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.cmdadd1, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.cmdadd1)
+                    @Html.ValidationMessageFor(model => model.cmdadd1)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.cmdadd2, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.cmdadd2)
+                    @Html.ValidationMessageFor(model => model.cmdadd2)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+    
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+</body>
+</html>

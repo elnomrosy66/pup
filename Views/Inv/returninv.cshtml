@@ -1,0 +1,120 @@
+﻿@model IEnumerable<H_Invoice.Models.Einv2>
+@{
+    ViewBag.Title = "returninv";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title">إشعار خصم فاتورة رقم (@ViewBag.id)</h1>
+        <br />
+        <span style="text-align: right; color: red;">
+            (قم باختيار البنود التي تريد ارسالها في إشعار الخصم ليتم خصمها من الفاتورة الأصلية)
+            <br />
+            (يتم إظهار البنود التي لم يحدث عليها اي اشعارات خصم)
+        </span>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <div class="col-12">
+            <table class="table" id="TblItems">
+                <thead>
+                    <tr>
+                        <th hidden><label>fالكود</label></th>
+                        <th><label>الكود</label></th>
+                        <th><label>الصنف</label></th>
+                        <th><label>الكمية</label></th>
+                        <th><label>السعر</label></th>
+                        <th><label>الإجمالي</label></th>
+                        <th><label>خصم</label></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var s in Model)
+                    {
+                    <tr>
+                        <td hidden><label>@s.ser</label></td>
+                        <td><label>@s.itemCode</label></td>
+                        <td><label>@s.description</label></td>
+                        <td><label>@s.quantity</label></td>
+                        <td><label>@s.amountEGP</label></td>
+                        <td><label>@s.amountEGP</label></td>
+                        @*<td class="eert"><label> <i onclick="this.parentNode.classList.add('eert');"  class="fas fa-undo-alt toggle"></i></label></td>*@
+                        <td><input class="check" onchange="" type="checkbox"  /></td>
+                    </tr>
+                    }
+
+
+                </tbody>
+            </table>
+
+
+            <button id="btnsubmit" class="btn btn-success">حفظ المرتجع</button>
+        </div>
+    </div>
+    <!-- /.card-body -->
+</div>
+
+@section scripts{
+
+    @Scripts.Render("~/jqueryDatatable/js")
+
+<script>
+        $("#btnsubmit").click(function () {
+            collectreturns();
+        });
+        function collectreturns() {
+            var orderViewModel = {};
+            var ser = new Array();
+            orderViewModel.Inv_no =@ViewBag.id;
+
+            $("#TblItems").find("tr:gt(0)").each(function () {
+                var check = $(this).find("td:eq(6)").find('input:checkbox:first');
+                var OrderDetailsViewModel = {};
+                if (check.prop("checked")) {
+                    ser.push($(this).find("td:eq(0)").text());
+                   
+                    $(this).hide('slow', function () { });
+                    check.prop("checked", false);
+                }
+                
+                //OrderDetailsViewModel.ser =
+            });
+            
+            if (ser.length == 0) {
+                alert("لم يتم  إختيار اي بنود");
+                return;
+            }
+            orderViewModel.ser = ser;
+            //alert(JSON.stringify(orderViewModel));
+            //return;
+            $.ajax({
+                async: true,
+                type: 'POST',
+                dataType: 'JSON',
+                contentType: 'application/json charset=utf-8',
+                data: JSON.stringify(orderViewModel),
+                url: '/inv/returninv',
+                success: function (data) {
+                    if (data == "0") {
+                        alert("خطاء في عملية الخصم الرجاء الرجوع للدعم الفني");
+                    }
+                    if (data == "ok") {
+                        alert("تم إضافة إشعار الخصم بنجاح");
+                    }
+
+                    else {
+                        alert(data);
+                    }
+                },
+                error: function () {
+                    alert("خطاء في حفظ البانات");
+                }
+            }
+                );
+        }
+</script>
+
+}
+
+

@@ -1,0 +1,98 @@
+﻿
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card ">
+    <div class="card-header">
+        <h3 class="card-title">صنف جديد</h3>
+    </div>
+    <div class="card-body " style="text-align:right;">
+        <form method="post" action="/items/create" class="form">
+            <div class="row">
+
+
+                <div class="col-md-6">
+                    <div class="form-group row">
+
+                        <div class="col-md-3 "><label>تسلسل</label></div>
+                        <div class="col-md-9 "><input type="text" name="noo" id="noo" class="form-control  " /></div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3 "><label>كود الصنف</label></div>
+                        <div class="col-md-9 "><input type="text" name="PARTNO" id="PARTNO" class="form-control d-inline " /></div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3 d-inline"><label>التكويد العالمي</label></div>
+                        <div class="col-md-9 d-inline"><input type="text" name="barcode" id="barcode" class="form-control d-inline " /></div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3 d-inline"><label>اسم الصنف</label></div>
+                        <div class="col-md-9 d-inline"><input type="text" name="DESC" id="DESC" class="form-control d-inline " /></div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3 d-inline"><label>اسم الصنف عربي</label></div>
+                        <div class="col-md-9 d-inline"><input type="text" name="A_DESC" id="A_DESC" class="form-control d-inline " /></div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3 d-inline"><label>اسم التصنيف</label></div>
+                        <div class="col-md-9 d-inline">@Html.DropDownList("CAT_ID", new SelectList(ViewBag.categories, "Value", "Text"), "التصنيف", new { @class = "form-control d-inline" })</div>
+                        <div class="col-md-9 d-inline"><input hidden type="text" name="Name" id="Name" class="form-control"  /></div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3 d-inline"><label> السعر</label></div>
+                        <div class="col-md-9 d-inline"><input type="text" name="COST" id="COST" class="form-control d-inline " /></div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-lg-12 d-inline" style="text-align:left; padding-left:40px;">
+                            <input type="submit" value="إضافة" class="form-control btn btn-success" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <!-- /.card-body -->
+</div>
+
+<div>
+    @Html.ActionLink("عودة", "Index")
+</div>
+
+@section scripts {
+    
+    <script>
+        $(document).ready(function () {
+
+            $("#CAT_ID").change(function () {
+                var itemId = $("#CAT_ID").val();
+                if ($("#CAT_ID option:selected ").text() == "التصنيف") {
+                    //$("#BtnAddList").attr("disabled", "disabled");
+                }
+                else {
+                    var name = $("#CAT_ID option:selected ").text();
+                    $("#Name").val(name);
+                }
+            });
+
+            
+        });
+    </script>
+    
+    
+    
+    
+    }
+
+
+

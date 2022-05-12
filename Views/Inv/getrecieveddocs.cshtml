@@ -1,0 +1,350 @@
+﻿
+@{
+    ViewBag.Title = "الفواتير الواردة";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //bool s = User.Identity.IsAuthenticated;
+}
+
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title">الفواتير الواردة</h1>
+        <h1 class=" card-title float-left"> عدد السجلات(<span class="totalrows">0</span>) </h1>
+        <div style="clear:both;"></div>
+        <span>جلب الفواتير خلال <select id="nofdays"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select> يوم</span>
+        <button id="btnUpdate" class="btn btn-success button" onclick="this.classList.toggle('button--loading')"><span class="button__text">تحديث</span></button>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <div class="container date-filter">
+            <label>من : </label>
+            <input class="form-control d-inline" type="text" id="min" name="min">
+            <label>إلي : </label>
+            <input class="form-control d-inline" type="text" id="max" name="max">
+        </div>
+
+        <table id="example1" class="display table table-bordered table-hover  " style="width:100%">
+            <thead>
+                <tr>
+                    <th>
+                        رقم الفاتورة
+                    </th>
+                    <th>
+                        التاريخ
+                    </th>
+                    <th>
+                        اسم البائع
+                    </th>
+
+                    <th>
+                        الإجمالي
+                    </th>
+                    <th>
+                        النوع
+                    </th>
+
+                    <th>
+                        الحالة
+                    </th>
+                    <th>
+                        uuid
+                    </th>
+                    <th>
+                        عمليات
+                    </th>
+                </tr>
+            </thead>
+        </table>
+        <button hidden id="buttonmodal" class="fa fa-edit btn changeb" data-toggle="modal" data-target="#myModal" data-whatever="item.CATEGORY"></button>
+        <div class="modal fade bd-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="col-md-2">
+                            <h6 id="modalTitle"></h6>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 id="modalCustName"></h6>
+                        </div>
+                        <div class="col-md-2">
+                            <h6 id="modalTotal"></h6>
+                        </div>
+                        <div class="col-md-2  ">
+                            <button type="button" class="close float-left" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <input hidden type="text" id="id-DocNo" /><input hidden type="text" id="sent" />
+                            <table id="tableS7" class="display table table-bordered table-hover  " style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <td>
+                                            PARTNO
+                                        </td>
+                                        <td>
+                                            NAME
+                                        </td>
+                                        <td>
+                                            int_code
+                                        </td>
+                                        <td>
+                                            partname
+                                        </td>
+                                        <td>
+                                            QTY
+                                        </td>
+                                        <td>
+                                            PRICE
+                                        </td>
+                                        <td>
+                                            uuid
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">غلق</button>
+                        <button type="button" id="sendButton" class="btn btn-primary" data-id="">دمج</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.card-body -->
+</div>
+
+@section scripts {
+
+    @Scripts.Render("~/jqueryDatatable/js")
+
+    <script>
+        $(function () {
+
+            
+
+            function format(d) {
+                //$("#tableS7 tr").remove();
+                $("#tableS7").children().remove()
+                var TblItems = $("#tableS7");
+                var row = "<thead><tr><td>الاسم</td><td>الوصف</td><td>القيمة</td><td>المدفوع</td><td>نوع الخدمة</td><td>كود الخدمة</td></tr ></thead ><tbody>";
+                TblItems.append(row);
+                row = "";
+                jQuery.each(d, function (i, val) {
+                    row += '<tr>';
+                    jQuery.each(val, function (i, val2) {
+                        row += '<td>' + val2 + '</td>'
+                    });
+                    row += '</tr></tbody>'
+                    TblItems.append(row);
+                    row = "";
+                });
+            }
+
+            // Custom filtering function which will search data in column four between two values
+            $.fn.dataTable.ext.search.push(
+                function (settings, data, dataIndex) {
+                    var min = minDate.val();
+                    var max = maxDate.val();
+                    var date = new Date(data[2]);//column index
+
+                    if (
+                        (min === null && max === null) ||
+                        (min === null && date <= max) ||
+                        (min <= date && max === null) ||
+                        (min <= date && date <= max)
+                    ) {
+                        return true;
+                    }
+                    return false;
+                }
+            );
+
+
+            $(document).ready(function () {
+                //clone table header
+                $('#example1 thead tr')
+                    .clone(true)
+                    .addClass('filters')
+                    .appendTo('#example1 thead');
+                // Create date inputs
+                minDate = new DateTime($('#min'), {
+                    format: 'DD/MM/YYYY'
+                });
+                maxDate = new DateTime($('#max'), {
+                    format: 'DD/MM/YYYY'
+                });
+                var dt = $('#example1').DataTable({
+                    "processing": true,
+                    "serverSide": false,
+                    "ajax": {
+                        "url": "/test.json", //"/inv/getdataforrecieveddocs",
+                        "type": "GET",
+                        "datatype": "json"
+                    },
+                    "columns": [
+
+                        { "data": "internalId"  },
+                        { "data": "dateTimeReceived", "type": "datetime", "render": function (data, type, full) { return (data) ? moment(data).format('YYYY/MM/DD') : '';}},
+                        { "data": "issuerName" },
+                        { "data": "total", "render": $.fn.dataTable.render.number(',', '.', 2, "") },
+                        { "data": "typeName" },
+                        { "data": "status" },
+                        { "data": "uuid" },
+                        {
+                            "class": "details-control  ",
+                            "orderable": false,
+                            "data": "publicUrl",
+                            "render": function ( data, type, row, meta )
+                            {
+                                return (data) ? "<a target='blank' href= " + data + "><i class='inv-showurl fas fa-file-pdf'></i></a> <a  href='deletedoc?uuid=" + row.uuid + "'><i class='inv-show fas fa-ban'></i></a>" : '';
+                            }
+                            //"type": "string", "render": function (data, type, full) { ; }
+                        },
+                    ],
+
+                    "columnDefs":
+                    [
+                        { targets: 0, className: "ttxt" },
+                        { targets: 1, className: "ttxt " },
+                        { targets: 2, className: "ttxt"},
+                        { targets: 3, className: "ttxt" },
+                        { targets: 4, className: "ttxt" },
+                        { targets: 5, className: "ttxt" },
+                        { targets: 6, className: "ttxt" },
+                        { targets: 7, className: "ttxt" },
+
+                    ],
+                    "select": true,
+                    "responsive": false,
+                    "lengthChange": false,
+                    "autoWidth": true,
+                    "searching": true,
+                    "bPaginate": true,
+                    "bInfo": false,
+                    "orderCellsTop": true,
+                    "fixedHeader": true,
+                    "order": [[0, "desc"]],
+                    "drawCallback": function () {
+                        $(".totalrows").text(this.api().page.info().recordsDisplay)
+                    },
+                    "initComplete": function () {
+
+                        var api = this.api();
+                        // For each column
+                        api.columns().eq(0).each(function (colIdx) {
+                                // Set the header cell to contain the input element
+                                var cell = $('.filters th').eq(
+                                    $(api.column(colIdx).header()).index()
+                                );
+                                var title = $(cell).text();
+                                if (title !="")
+                                    $(cell).html("<input type='text' id =DTcol-"+colIdx+"   >");
+
+                                // On every keypress in this input
+                                $(
+                                    'input',
+                                    $('.filters th').eq($(api.column(colIdx).header()).index())
+                                )
+                                    .off('keyup change')
+                                    .on('keyup change', function (e) {
+                                        e.stopPropagation();
+
+                                        // Get the search value
+                                        $(this).attr('title', $(this).val());
+                                        var regexr = '({search})'; //$(this).parents('th').find('select').val();
+
+                                        var cursorPosition = this.selectionStart;
+                                        // Search the column for that value
+                                        api
+                                            .column(colIdx)
+                                            .search(
+                                                this.value != ''
+                                                    ? regexr.replace('{search}', '(((' + this.value + ')))')
+                                                    : '',
+                                                this.value != '',
+                                                this.value == ''
+                                            )
+                                            .draw();
+
+                                        $(this)
+                                            .focus()[0]
+                                            .setSelectionRange(cursorPosition, cursorPosition);
+
+                                    });
+
+                        });
+
+                    },
+                    "language": {
+                        "url": "/translation/datatable-arabic.json"
+                    }
+                });
+
+                // Refilter the table
+                $('#min, #max').on('change', function () {
+                    dt.draw();
+                });
+
+
+                // Array to track the ids of the details displayed rows
+                var detailRows = [];
+                $('#example1 tbody').on('click', 'tr td.details-control i.inv-show ', function () {
+
+                    var tr = $(this).closest('tr');
+                    var Doc_No = parseFloat(tr.find("td:eq(0)").text());
+                    var br_id = tr.find("td").eq(1).text();
+
+                    //var sent = tr.find("td:eq(8)").text();
+                    window.location.href = '/invoice/view/' + Doc_No + '?br_id=' + br_id + '&form_no=3';
+
+                });
+                $('#btnUpdate').on('click', function () {
+                    //alert("ffd");
+                    const theButton = document.querySelector(".button");
+                    
+                    
+                    var nofdays = $("#nofdays").val();
+                    alert(nofdays);
+                    $.ajax({
+                        async: true,
+                        type: 'GET',
+                        dataType: 'JSON',
+                        contentType: 'application/json; charset=utf-8',
+
+                        url: "/Inv/getdataforrecieveddocs?nofdays=" + nofdays,
+                        success: function (data) {
+                            alert(data);
+                            dt.ajax.url("/test.json").load();
+                            theButton.classList.remove("button--loading");
+                        },
+                        error: function () {
+                            alert("خطاء")
+                        }
+                    });
+                    
+                   
+                });
+               
+
+                
+                // On each draw, loop over the `detailRows` array and show any child rows
+                dt.on('draw', function () {
+                    $.each(detailRows, function (i, id) {
+                        $('#' + id + ' td.details-control').trigger('click');
+                    });
+                });
+
+            });
+
+        });
+    </script>
+}
+

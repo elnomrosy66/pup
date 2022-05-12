@@ -1,0 +1,98 @@
+﻿@model H_Invoice.Models.InvValidationWithRespoVM
+
+@if (Model.validationErrors.Count > 0)
+{
+    <span>لم يتم الارسال لوجود أخطاء</span>
+    <table class="table">
+        <tr>
+            <th>
+                الرسالة
+            </th>
+            <th>
+                (رقم الفاتورة)المرجع
+            </th>
+        </tr>
+
+        @foreach (var item in Model.validationErrors)
+        {
+            <tr style="color:@item.Color">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Message)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Reference)
+                </td>
+
+            </tr>
+        }
+
+    </table>
+}
+
+@if (Model.respo != null)
+{
+    <div class="container" dir="ltr">
+        @{
+            <h6>الفواتير المرسلة</h6>
+
+            if (Model.respo.acceptedDocuments.Count > 0)
+            {
+                foreach (var item in Model.respo.acceptedDocuments)
+                {
+                    <span class="text-success">تم الارسال بنجاح</span>
+                    <div class='row'>
+                        <div class="col-md-6">
+
+                            <div class="row"> UUID</div>
+
+                            <div class="row"> internalId</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">  @Html.DisplayFor(modelItem => item.uuid)</div>
+
+                            <div class="row">  @Html.DisplayFor(modelItem => item.internalId)</div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            { <span class="text-danger">فشل الارسال </span> <span></span>}
+        }
+
+        @{
+            <h6>الفواتير المرفوضة</h6>
+
+            if (Model.respo.rejectedDocuments.Count > 0)
+            {
+                foreach (var item2 in Model.respo.rejectedDocuments)
+                {
+                    <div class='row table col-md-12'>
+                        <div class="col-md-3">
+                            <div class="row"> internalId</div>
+                            <div class="row"> details</div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="col-md-3">@Html.DisplayFor(modelItem => item2.internalId)</div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    @foreach (var erd in item2.error.details)
+                                    {
+                                        <div class='row'>
+                                            <div class="col-md-12">
+                                                <div class="row">Code :  @Html.DisplayFor(modelItem => erd.code)</div>
+                                                <div class="row">message : @Html.DisplayFor(modelItem => erd.message)</div>
+                                                <div class="row">target : @Html.DisplayFor(modelItem => erd.target)</div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+
+        }
+    </div>
+}
+

@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "إلغاء الفواتير";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title">الغاء فاتورة</h1>        
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <div class="col-12">
+            <input id="inv_no" name="inv_no" class="form-control d-inline" type="text" placeholder="ادخل رقم الفاتورة" />
+            <span>أو</span>
+            <input id="uuid" name="uuid" class="form-control d-inline" type="text" placeholder="ادخل UUID" /> - 
+            <input id="reason" name="reason" class="form-control d-inline" type="text" placeholder="سبب الإلغاء" />
+            <input id="submit" name="in_no" class="btn btn-success d-inline " type="submit" value="إلغاء الفاتورة" />
+
+            <br /><br /><br /><br />
+        </div>
+    </div>
+    <!-- /.card-body -->
+</div>
+
+@section scripts {
+    @Scripts.Render("~/jqueryDatatable/js")
+<script>
+        $(document).ready(function () {
+            var Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+            $("#submit").on('click', function () {
+                var inv_no = $("#inv_no").val();
+                var uuid = $("#uuid").val();
+                if (inv_no == "" && uuid == "") {
+                    alert("ادخل بيانات الفاتورة");
+                    return;
+                }
+                $.ajax({
+                    async: true,
+                    type: 'GET',
+                    dataType: 'JSON',
+                    contentType: 'application/json; charset=utf-8',
+                    data: { uuid: uuid, inv_no: inv_no },
+                    url: "/inv/submitcancledoc",
+                    success: function (data) {
+                        if (data == "ok") {
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'تم الغاء الفاتورة بنجاح'
+                            });
+                        }
+                        else {
+                            alert(data);
+                        }
+                    },
+                    error: function () {
+                        alert("خطاء في الاتصال")
+                    }
+                });
+            });
+        });
+</script>
+
+    }

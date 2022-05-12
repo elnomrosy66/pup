@@ -1,0 +1,176 @@
+﻿@model IEnumerable<H_Invoice.Models.invitem>
+
+@{
+    ViewBag.Title = "الأصناف";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+<div class="card">
+    <div class="card-header">
+        <p class="card-title">الأصناف</p>
+        <a href="@Url.Action("create", "items")" class="btn btn-success"><i class="fas fa-plus"></i> صنف جديد</a>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table id="example2" class="table table-bordered table-hover table-responsive ">
+            <thead>
+                <tr>
+                    <th>
+                        <label>تسلسل</label>
+                    </th>
+                    <th>
+                        <label>كود الصنف</label>
+                    </th>
+                    <th>
+                        <label>التكويد العالمي</label>
+                    </th>
+
+                    <th>
+                        <label>اسم الصنف</label>
+                    </th>
+                    <th>
+                        <label>اسم الصنف عربي</label>
+                    </th>
+                    <th>
+                        <label>كود التصنيف</label>
+                    </th>
+
+                    <th>
+                        <label>اسم التصنيف</label>
+                    </th>
+                    <th>
+                        <label>السعر</label>
+                    </th>
+
+
+
+
+                    <th>
+                        عمليات
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.noo)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PARTNO)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.barcode)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DESC)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.A_DESC)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CAT_ID)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NAME)
+                    </td>
+
+                    <td >
+                        @Html.DisplayFor(modelItem => item.COST)
+                    </td>
+
+                    <td>
+                        @Html.ActionLink(" ", "edit", new { id = item.ser  }, new { Class = "fa fa-edit"  } )
+                        @Html.ActionLink(" ", "delete", new { id = item.ser }, new { Class = "fa fa-trash fa-danger", Style = "color:red;" })
+                    </td>
+
+                </tr>
+
+                }
+
+            </tbody>
+            <!--<tfoot>
+                <tr>
+                    <th>
+                        <label>تسلسل</label>
+                    </th>
+                    <th>
+                        <label>كود الصنف</label>
+                    </th>
+                    <th>
+                        <label>اسم الصنف</label>
+                    </th>
+                    <th>
+                        <label>اسم الصنف عربي</label>
+                    </th>
+                    <th>
+                        <label>كود التصنيف</label>
+                    </th>
+
+                    <th>
+                        <label>اسم التصنيف</label>
+                    </th>
+                    <th>
+                        <label>السعر</label>
+                    </th>
+                    <th>
+                        <label>متوسط السعر</label>
+                    </th>
+                    <th>
+                        <label>رقم الطلب</label>
+                    </th>
+                    <th>
+                        <label>الفترة</label>
+                    </th>
+                    <th>
+                        <label>Bom</label>
+                    </th>
+
+                    <th>
+                        عمليات
+                    </th>
+                </tr>
+            </tfoot>-->
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>
+
+@section scripts {
+
+    @Scripts.Render("~/jqueryDatatable/js")
+    <script>
+        $(function () {
+            $("#example2").DataTable({
+                "columnDefs": [{ targets: 0, className: "ttxt" },
+                { targets: 1, className: "ttxt" },
+                { targets: 2, className: "ttxt" },
+                { targets: 3, className: "ttxt" },
+                { targets: 4, className: "ttxt" },
+                { targets: 5, className: "ttxt" },
+                { targets: 6, className: "ttxt" },
+                { targets: 7, className: "ttxt" },
+                ],
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": true,
+                "searching": false,
+                "bPaginate": false,
+                "bInfo": false
+                //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+
+            });//.buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+        });
+    </script>
+}

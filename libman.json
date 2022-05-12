@@ -1,0 +1,49 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "bootstrap-datepicker@1.9.0",
+      "destination": "plugins/bootstrap-datepicker/",
+      "files": [
+        "js/bootstrap-datepicker.min.js",
+        "css/bootstrap-datepicker.min.css"
+      ]
+    },
+    {
+      "library": "datatables.net-dt@1.1.1",
+      "destination": "plugins/datatables.net-dt/",
+      "files": [
+        "js/dataTables.dataTables.min.js",
+        "css/jquery.dataTables.min.css",
+        "images/sort_asc.png",
+        "images/sort_asc_disabled.png",
+        "images/sort_both.png",
+        "images/sort_desc.png",
+        "images/sort_desc_disabled.png"
+      ]
+    },
+    {
+      "provider": "unpkg",
+      "library": "datatables.net-datetime@1.1.1",
+      "destination": "plugins/datatables.net-datetime/"
+    },
+    {
+      "library": "datatables.net-buttons@2.0.1",
+      "destination": "plugins/datatables.net-buttons/",
+      "files": [
+        "js/dataTables.buttons.min.js",
+        "js/buttons.print.min.js"
+      ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "js-cookie@3.0.0",
+      "destination": "plugins/js-cookie/",
+      "files": [
+        "dist/js.cookie.min.js",
+        "dist/js.cookie.js"
+      ]
+    }
+  ]
+}

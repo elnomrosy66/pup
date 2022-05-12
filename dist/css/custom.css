@@ -1,0 +1,233 @@
+
+
+tr.strikeout2 td {
+    background: transparent url('http://davidrhysthomas.co.uk/linked/strike.png') 0 10% repeat-x;
+}
+
+.button {
+    position: relative;
+    padding: 8px 16px;
+    background: #009579;
+    border: none;
+    outline: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+    .button:active {
+        background: #007a63;
+    }
+
+.button__text {
+    font: bold 20px "Quicksand", san-serif;
+    color: #ffffff;
+    transition: all 0.2s;
+}
+
+.button--loading .button__text {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.button--loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    border: 4px solid transparent;
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: button-loading-spinner 1s ease infinite;
+}
+
+@keyframes button-loading-spinner {
+    from {
+        transform: rotate(0turn);
+    }
+
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+
+
+
+.card-header .card-title {
+    float: right;
+    color: teal;
+}
+
+.card-body {
+    text-align: center;
+}
+
+.card-title {
+    font-weight: 600 !important;
+}
+
+
+td {
+    padding: 0rem !important;
+}
+
+.ttxt {
+    color: teal !important;
+    padding: 0.25rem !important;
+    font-size: 13px !important;
+    padding: 0rem;
+    font-weight: 500 !important;
+    margin: 200px;
+}
+
+
+hr{
+    margin :0px;
+}
+
+.content-header {
+    padding: 5px !important;
+}
+
+.navbar {
+    padding: 3px !important;
+}
+.nav-link{
+    font-size:12px;
+    
+}
+.nav-head {
+    font-size: 14px !important;
+}
+
+.content-wrapper {
+    background-color: #dce8d4 !important;
+}
+
+fieldset {
+    background-color: #eeeeee;
+}
+
+legend {
+    background-color: lightgray;
+    color: white;
+    padding: 5px 10px;
+}
+
+.form-group {
+    margin: 3px;
+    padding: 0px;
+    font-size: 1px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown1 {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown2 {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    text-align: right;
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 185px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 12px 0px;
+    z-index: 1;
+}
+
+.dropdown-content1 {
+    text-align: right;
+    display: none;
+    position: absolute;
+    right: 90px;
+    top: -10px;
+    background-color: #f9f9f9;
+    min-width: 185px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 12px 0px;
+    z-index: 1;
+}
+
+.dropdown-content2 {
+    text-align: right;
+    display: none;
+    position: absolute;
+    right: 90px;
+    top: 10px;
+    background-color: #f9f9f9;
+    min-width: 185px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 12px 0px;
+    z-index: 1;
+}
+
+
+
+
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown1:hover .dropdown-content1 {
+    display: block;
+}
+
+.dropdown2:hover .dropdown-content2 {
+    display: block;
+}
+
+.subdropdown:hover .subdropdown-content li {
+    display: block;
+}
+
+
+
+input, body, legend, label, select, textarea {
+    font-size: 0.9rem !important;
+}
+
+td.details-control {
+    /*background: url('../resources/details_open.png') no-repeat center center;*/
+    cursor: pointer;
+}
+
+tr.details td.details-control {
+    background: url('../resources/details_close.png') no-repeat center center;
+}
+
+thead input {
+    width: 100%;
+    padding-left: 0px;
+    margin-left: 0px !important;
+    margin-right: -20px !important;
+    box-sizing: border-box;
+}
+
+table.dataTable > thead > tr > td:not(.sorting_disabled) {
+    padding-right: 0px !important;
+}
+
+.date-filter input {
+    max-height: 30px !important;
+    max-width: 100px;
+}
+.dataTables_filter {
+    display: none;
+}

@@ -1,0 +1,29 @@
+﻿<div class="row invoice-info" style="border-style: solid; border-radius:10px; padding:5px; margin: 10px; justify-content:center; text-align:center;">
+    <div class="col-sm-4 invoice-col">
+
+        <div><span id="coaddress-en">@TempData["name_ar"]</span> </div><br />
+        <div><span id="cophone-en"></span>@TempData["addr_ar"] </div>
+
+
+    </div>
+
+    <div class="col-sm-4 invoice-col ">
+
+        @{
+            <img src="@ViewBag.ImageDataUrl" width="100" height="100" />
+        }
+
+    </div>
+    <div class="col-sm-4 invoice-col">
+
+
+        <div><span id="coaddress-en">@TempData["name_en"]</span> </div><br />
+        <div><span id="cophone-en"></span>@TempData["addr_en"] </div>
+
+    </div>
+
+</div>
+
+<div class="container" style="align-content: center; text-align: center; max-width ">
+    <h5 style="border-right-style: solid; border-bottom-style: solid; padding: 10px; margin-right: 300px; margin-left: 300px; ">كشف حساب مريض بالمستشفي</h5>
+</div>

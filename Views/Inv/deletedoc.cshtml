@@ -1,0 +1,66 @@
+﻿
+@{
+    ViewBag.Title = "رفض الفواتير";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title">رفض فاتورة</h1>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <div class="col-12">
+            
+            <input disabled id="uuid" name="uuid" class="form-control d-inline" type="text" placeholder="ادخل UUID" value="@ViewBag.uuid"/> -
+            <input id="reason" name="reason" class="form-control d-inline" type="text" placeholder="سبب الرفض" />
+            <input id="submit" name="in_no" class="btn btn-success d-inline " type="submit" value="رفض الفاتورة" />
+            <br /><br /><br /><br />
+        </div>
+    </div>
+    <!-- /.card-body -->
+</div>
+
+@section scripts {
+    @Scripts.Render("~/jqueryDatatable/js")
+    <script>
+        $(document).ready(function () {
+            var Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            $("#submit").on('click', function () {
+               // var inv_no = $("#inv_no").val();
+                var uuid = $("#uuid").val();
+                if ( uuid == "") {
+                    alert("ادخل بيانات الفاتورة");
+                    return;
+                }
+                $.ajax({
+                    async: true,
+                    type: 'GET',
+                    dataType: 'JSON',
+                    contentType: 'application/json; charset=utf-8',
+                    data: { uuid: uuid },
+                    url: "/inv/submitdeletedoc",
+                    success: function (data) {
+                        if (data == "ok") {
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'تم الغاء الفاتورة بنجاح'
+                            });
+                        }
+                        else {
+                            alert(data);
+                        }
+                    },
+                    error: function () {
+                        alert("خطاء في الاتصال")
+                    }
+                });
+            });
+        });
+    </script>
+
+}

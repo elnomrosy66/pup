@@ -1,0 +1,200 @@
+﻿@model IEnumerable<H_Invoice.Models.SALE1>
+
+@{
+    ViewBag.Title = "send";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@{ 
+    DateTime dt = new DateTime();
+    dt = DateTime.Today;
+    dt.ToString("MMM/dd/yyyy");
+}
+
+<div class="card">
+    <div class="card-header">
+        <p class="card-title">ارسال الفواتير</p>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        @using (Html.BeginForm("send", "invoice", FormMethod.Post))
+        {
+            <table id="example2" class="table table-bordered table-hover ">
+                <thead>
+                    <tr>
+                        
+
+                        <th>
+                            @Html.DisplayNameFor(model => model.DOC_NO)
+                        </th>
+
+
+
+                        <th>
+                            @Html.DisplayNameFor(model => model.DOC_DATE)
+                            
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CODE)
+                        </th>
+
+                        <th width="170px">
+                            @Html.DisplayNameFor(model => model.NAME)
+                        </th>
+                        <th>
+                            Sub_Name
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.AMOUNT)
+                        </th>
+
+
+
+                        <th>
+                            @Html.DisplayNameFor(model => model.send_date)
+                            
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.send_user)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.send_rem)
+                        </th>
+
+                        <th>
+                            عمليات
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                    <tr>
+                        
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DOC_NO)
+                        </td>
+
+
+
+                        <td>
+
+                            @{dt = item.DOC_DATE.Value;}
+                            @dt.ToString("dd/MM/yyyy")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CODE)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NAME)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.rem2)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AMOUNT)
+                        </td>
+
+
+                        <td>
+
+                            @{
+
+                                if (item.send_date != null)
+                                {
+                                    dt = item.send_date.Value;
+                                    @dt.ToString("dd/MM/yyyy")
+                                }
+
+
+                                        ;}
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.send_user)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.send_rem)
+                        </td>
+
+                        <td>
+
+                            @Html.ActionLink(" ", "index", new { id = item.DOC_NO, br_id = item.br_id }, new { Class = "fa fa-eye", Style = "" })
+                            @{ if (item.send == false)
+                                { @Html.ActionLink(" ", "edit", new { id = item.DOC_NO, br_id = item.br_id }, new { Class = "fa fa-edit" })   } }
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+
+            </table>
+
+            <input type="submit" value="Send" />
+        }
+    </div>
+    <!-- /.card-body -->
+</div>
+
+@section scripts {
+
+    @Scripts.Render("~/jqueryDatatable/js")
+<script>
+        $(function () {
+            $("#example2").DataTable({
+                "columnDefs": [
+                    { targets: 0, className: "ttxt" },
+                    { targets: 1, className: "ttxt" },
+                    { targets: 2, className: "ttxt" },
+                    { targets: 3, className: "ttxt" },
+                    { targets: 4, className: "ttxt" },
+                    { targets: 5, className: "ttxt" },
+                    { targets: 6, className: "ttxt" },
+                    { targets: 7, className: "ttxt" },
+                    { targets: 8, className: "ttxt" }
+
+                ],
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": true,
+                "searching": false,
+                "bPaginate": false,
+                "bInfo": false,
+                "order": [[0, "desc"]]
+                //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+
+            });//.buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+
+
+
+            var Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000
+                });
+
+                var toster = "@TempData["toster"]";
+                if (toster != null && toster != '')
+                {
+                    Toast.fire({
+                        icon: "@TempData["tosterIcon"]",
+                        title: '@TempData["tosterMsg"]'
+                    })
+                }
+
+        });
+
+
+
+
+
+
+
+</script>
+}
+

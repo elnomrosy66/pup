@@ -1,0 +1,607 @@
+﻿@model IEnumerable<H_Invoice.Models.sale7>
+@{
+    ViewBag.Title = "سندات خارجى";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title">سندات خارجى</h1>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <div class="container date-filter">
+            <label>من : </label>
+            <input class="form-control d-inline" type="text" id="min" name="min">
+            <label>إلي : </label>
+            <input class="form-control d-inline" type="text" id="max" name="max">
+        </div>
+        <table id="example1" class="display table table-bordered table-hover  " style="width:100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>
+                        <label>الرقم</label>
+                    </th>
+                    <th>
+                        <label>التاريخ</label>
+                    </th>
+                    <th>
+                        <label>القيمة</label>
+                    </th>
+                    <th>
+                        <label>الخصم</label>
+                    </th>
+                    <th>
+                        <label>اسم المريض</label>
+                    </th>
+                    <th>
+                        <label>التعاقد</label>
+                    </th>
+                    <th>
+                        <label>#قيد</label>
+                    </th>
+                    <th></th>
+                    <th><label>اختر الكل</label><input id="selectAll" name="all" type="checkbox"></th>
+                </tr>
+            </thead>
+
+        </table>
+        <button  id="btnBulk" type="button" class="button buttonload" onclick="this.classList.toggle('button--loading')">
+            <span class="button__text">دمج المحدد</span>
+        </button>
+
+        <button hidden id="buttonmodal" class="fa fa-edit btn changeb" data-toggle="modal" data-target="#myModal" data-whatever="item.CATEGORY"></button>
+        <div class="modal fade bd-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="col-md-2">
+                            <h6 id="modalTitle"></h6>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 id="modalCustName"></h6>
+                        </div>
+                        <div class="col-md-2">
+                            <h6 id="modalTotal"></h6>
+                        </div>
+                        <div class="col-md-2  ">
+                            <button type="button" class="close float-left" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <input hidden type="text" id="id-DocNo" /><input hidden type="text" id="sent" />
+
+                            <table id="tableS7" class="display table table-bordered table-hover  " style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <td>
+                                            PARTNO
+                                        </td>
+                                        <td>
+                                            NAME
+                                        </td>
+                                        <td>
+                                            int_code
+                                        </td>
+                                        <td>
+                                            partname
+                                        </td>
+                                        <td>
+                                            QTY
+                                        </td>
+                                        <td>
+                                            PRICE
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">غلق</button>
+                        <button type="button" id="sendButton" class="btn btn-primary" data-id="">دمج</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="myModal2" class="modal fade" role="dialog" overflow:scroll; height80px!important;" >
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content" style=" overflow: scroll; max-height: 800px;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h6 class="modal-title">Responce Details</h6>
+                    </div>
+                    <div class="modal-body" id="ModalBody" style=">
+
+                    </div>
+                    <div id="html1"></div>
+                    <div class="modal-footer">
+                        <button id="modal12close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- /.card-body -->
+</div>
+@section scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
+    
+    @Scripts.Render("~/jqueryDatatable/js")
+    <script>
+        $(function () {
+            function format(d) {
+                //$("#tableS7 tr").remove();
+                $("#tableS7").children().remove()
+                var TblItems = $("#tableS7");
+                var row = "<thead>< tr ><td>الكود</td><td>المجموعة</td><td>التكويد العالمي</td><td>اسم الخدمة</td><td>عدد</td><td>السعر</td></tr ></thead ><tbody>";
+                TblItems.append(row);
+                row = "";
+                jQuery.each(d, function (i, val) {
+                    row += '<tr>';
+                    jQuery.each(val, function (i, val2) {
+                        row += '<td>' + val2 + '</td>'
+                    });
+                    row += '</tr></tbody>'
+                    TblItems.append(row);
+                    row = "";
+                });
+                //return s;
+            }
+            // Custom filtering function which will search data in column four between two values
+            $.fn.dataTable.ext.search.push(
+                function (settings, data, dataIndex) {
+                    var min = minDate.val();
+                    var max = maxDate.val();
+                    var date = new Date(data[2]); //column index
+                    if (
+                        (min === null && max === null) ||
+                        (min === null && date <= max) ||
+                        (min <= date && max === null) ||
+                        (min <= date && date <= max)
+                    ) {
+                        return true;
+                    }
+                    return false;
+                }
+            );
+            $(document).ready(function () {
+                $('#example1 thead tr')
+                    .clone(true)
+                    .addClass('filters')
+                    .appendTo('#example1 thead');
+                // Create date inputs
+                minDate = new DateTime($('#min'), {
+                    format: 'DD/MM/YYYY'
+                });
+                maxDate = new DateTime($('#max'), {
+                    format: 'DD/MM/YYYY'
+                });
+                var dt = $('#example1').DataTable({
+                    "processing": true,
+                    "serverSide": false,
+                    "ajax": {
+                        "url": "/OtDInvoice/Getdata",
+                        "type": "GET",
+                        "datatype": "json",
+                        "dataSrc": ""
+                    },
+                    "columns": [
+                        {
+                            "class": "details-control",
+                            "orderable": false,
+                            "data": null,
+                            "defaultContent": "<i class='fa fa-plus'></i>"
+                        },
+                        { "data": "DOC_NO" },
+                        { "data": "DOC_DATE", "type": "date", "render": function (data, type, full) { return (data) ? moment(data).format('YYYY/MM/DD') : ''; } },
+                        { "data": "AMOUNT" },
+                        { "data": "DISCOUNT" },
+                        { "data": "NAME" },
+                        { "data": "cont_name" },
+                        { "data": "vou_no" },
+                        { "data": "e_inv", "render": function (data, type, full) { if (data != null) { if (data.toString() == 'true') { return "<i class='fa fa-check'></i><span hidden>" + data + "</span>"; } else { return "<i style='color:red;' class='fa fa-times'></i><span hidden>" + data + "</span>"; } } else { return "<i style='color:red;' class='fa fa-times'></i><span hidden>" + data + "</span>"; } } },
+                        {
+                            "class": "",
+                            "orderable": false,
+                            "data": "DOC_NO", "render": function (data, type, full) { return "<input name='chec' id='" + data + "' value='"+data+"' type='checkbox'>"; },
+                        },
+                    ],
+
+                    "columnDefs": [{ targets: 0, className: "ttxt" },
+                    { targets: 1, className: "ttxt" },
+                    { targets: 2, className: "ttxt" },
+                    { targets: 3, className: "ttxt" },
+                    { targets: 4, className: "ttxt" },
+                    { targets: 5, className: "ttxt" },
+                    { targets: 6, className: "ttxt" },
+                    { targets: 7, className: "ttxt" },
+                    { targets: 8, className: "ttxt" },
+                    { targets: 9, className: "ttxt" }
+                    ],
+                    "select": true,
+                    "responsive": false,
+                    "lengthChange": false,
+                    "autoWidth": true,
+                    "searching": true,
+                    "bPaginate": true,
+                    "bInfo": false,
+                    "orderCellsTop": true,
+                    "fixedHeader": true,
+                    "initComplete": function () {
+                        var api = this.api();
+                        // For each column
+                        api.columns().eq(0).each(function (colIdx) {
+                            // Set the header cell to contain the input element
+                            var cell = $('.filters th').eq(
+                                $(api.column(colIdx).header()).index()
+                            );
+                            var title = $(cell).text();
+                            if (title != "")
+                                $(cell).html("<input type='text'  >");
+                            if (title == "اختر الكل")
+                                $(cell).html("");
+                            // On every keypress in this input
+                            $(
+                                'input',
+                                $('.filters th').eq($(api.column(colIdx).header()).index())
+                            )
+                                .off('keyup change')
+                                .on('keyup change', function (e) {
+                                    e.stopPropagation();
+                                    // Get the search value
+                                    $(this).attr('title', $(this).val());
+                                    var regexr = '({search})'; //$(this).parents('th').find('select').val();
+
+                                    var cursorPosition = this.selectionStart;
+                                    // Search the column for that value
+                                    api
+                                        .column(colIdx)
+                                        .search(
+                                            this.value != ''
+                                                ? regexr.replace('{search}', '(((' + this.value + ')))')
+                                                : '',
+                                            this.value != '',
+                                            this.value == ''
+                                        )
+                                        .draw();
+
+                                    $(this)
+                                        .focus()[0]
+                                        .setSelectionRange(cursorPosition, cursorPosition);
+                                });
+                        });
+                    },
+                    "language": {
+
+                        "emptyTable": "ليست هناك بيانات متاحة في الجدول",
+                        "loadingRecords": "جارٍ التحميل...",
+                        "lengthMenu": "أظهر _MENU_ مدخلات",
+                        "zeroRecords": "لم يعثر على أية سجلات",
+                        "info": "إظهار _START_ إلى _END_ من أصل _TOTAL_ مدخل",
+                        "infoEmpty": "يعرض 0 إلى 0 من أصل 0 سجل",
+                        "infoFiltered": "(منتقاة من مجموع _MAX_ مُدخل)",
+                        "search": "بحث:",
+                        "paginate": {
+                            "first": "الأول",
+                            "previous": "السابق",
+                            "next": "التالي",
+                            "last": "الأخير"
+                        },
+                        "aria": {
+                            "sortAscending": ": تفعيل لترتيب العمود تصاعدياً",
+                            "sortDescending": ": تفعيل لترتيب العمود تنازلياً"
+                        },
+                        "select": {
+                            "rows": {
+                                "_": "%d قيمة محددة",
+                                "1": "1 قيمة محددة"
+                            },
+                            "cells": {
+                                "1": "1 خلية محددة",
+                                "_": "%d خلايا محددة"
+                            },
+                            "columns": {
+                                "1": "1 عمود محدد",
+                                "_": "%d أعمدة محددة"
+                            }
+                        },
+                        "buttons": {
+                            "print": "طباعة",
+                            "copyKeys": "زر <i>ctrl<\/i> أو <i>⌘<\/i> + <i>C<\/i> من الجدول<br>ليتم نسخها إلى الحافظة<br><br>للإلغاء اضغط على الرسالة أو اضغط على زر الخروج.",
+                            "copySuccess": {
+                                "_": "%d قيمة نسخت",
+                                "1": "1 قيمة نسخت"
+                            },
+                            "pageLength": {
+                                "-1": "اظهار الكل",
+                                "_": "إظهار %d أسطر"
+                            },
+                            "collection": "مجموعة",
+                            "copy": "نسخ",
+                            "copyTitle": "نسخ إلى الحافظة",
+                            "csv": "CSV",
+                            "excel": "Excel",
+                            "pdf": "PDF",
+                            "colvis": "إظهار الأعمدة",
+                            "colvisRestore": "إستعادة العرض"
+                        },
+                        "autoFill": {
+                            "cancel": "إلغاء",
+                            "fill": "املأ جميع الحقول بـ <i>%d&lt;\\\/i&gt;<\/i>",
+                            "fillHorizontal": "تعبئة الحقول أفقيًا",
+                            "fillVertical": "تعبئة الحقول عموديا"
+                        },
+                        "searchBuilder": {
+                            "add": "اضافة شرط",
+                            "clearAll": "ازالة الكل",
+                            "condition": "الشرط",
+                            "data": "المعلومة",
+                            "logicAnd": "و",
+                            "logicOr": "أو",
+                            "title": [
+                                "منشئ البحث"
+                            ],
+                            "value": "القيمة",
+                            "conditions": {
+                                "date": {
+                                    "after": "بعد",
+                                    "before": "قبل",
+                                    "between": "بين",
+                                    "empty": "فارغ",
+                                    "equals": "تساوي",
+                                    "not": "ليس",
+                                    "notBetween": "ليست بين",
+                                    "notEmpty": "ليست فارغة"
+                                },
+                                "number": {
+                                    "between": "بين",
+                                    "empty": "فارغة",
+                                    "equals": "تساوي",
+                                    "gt": "أكبر من",
+                                    "gte": "أكبر وتساوي",
+                                    "lt": "أقل من",
+                                    "lte": "أقل وتساوي",
+                                    "not": "ليست",
+                                    "notBetween": "ليست بين",
+                                    "notEmpty": "ليست فارغة"
+                                },
+                                "string": {
+                                    "contains": "يحتوي",
+                                    "empty": "فاغ",
+                                    "endsWith": "ينتهي ب",
+                                    "equals": "يساوي",
+                                    "not": "ليست",
+                                    "notEmpty": "ليست فارغة",
+                                    "startsWith": " تبدأ بـ "
+                                }
+                            },
+                            "button": {
+                                "0": "فلاتر البحث",
+                                "_": "فلاتر البحث (%d)"
+                            },
+                            "deleteTitle": "حذف فلاتر"
+                        },
+                        "searchPanes": {
+                            "clearMessage": "ازالة الكل",
+                            "collapse": {
+                                "0": "بحث",
+                                "_": "بحث (%d)"
+                            },
+                            "count": "عدد",
+                            "countFiltered": "عدد المفلتر",
+                            "loadMessage": "جارِ التحميل ...",
+                            "title": "الفلاتر النشطة"
+                        },
+                        "infoThousands": ",",
+                        "datetime": {
+                            "previous": "السابق",
+                            "next": "التالي",
+                            "hours": "الساعة",
+                            "minutes": "الدقيقة",
+                            "seconds": "الثانية",
+                            "unknown": "-",
+                            "amPm": [
+                                "صباحا",
+                                "مساءا"
+                            ],
+                            "weekdays": [
+                                "الأحد",
+                                "الإثنين",
+                                "الثلاثاء",
+                                "الأربعاء",
+                                "الخميس",
+                                "الجمعة",
+                                "السبت"
+                            ],
+                            "months": [
+                                "يناير",
+                                "فبراير",
+                                "مارس",
+                                "أبريل",
+                                "مايو",
+                                "يونيو",
+                                "يوليو",
+                                "أغسطس",
+                                "سبتمبر",
+                                "أكتوبر",
+                                "نوفمبر",
+                                "ديسمبر"
+                            ]
+                        },
+                        "editor": {
+                            "close": "إغلاق",
+                            "create": {
+                                "button": "إضافة",
+                                "title": "إضافة جديدة",
+                                "submit": "إرسال"
+                            },
+                            "edit": {
+                                "button": "تعديل",
+                                "title": "تعديل السجل",
+                                "submit": "تحديث"
+                            },
+                            "remove": {
+                                "button": "حذف",
+                                "title": "حذف",
+                                "submit": "حذف",
+                                "confirm": {
+                                    "_": "هل أنت متأكد من رغبتك في حذف السجلات %d المحددة؟",
+                                    "1": "هل أنت متأكد من رغبتك في حذف السجل؟"
+                                }
+                            },
+                            "error": {
+                                "system": "حدث خطأ ما"
+                            },
+                            "multi": {
+                                "title": "قيم متعدية",
+                                "restore": "تراجع"
+                            }
+                        },
+                        "processing": "جارٍ المعالجة..."
+
+                    }
+                });
+                $("#example1_filter").hide();
+
+                // Refilter the table
+                $('#min, #max').on('change', function () {
+                    dt.draw();
+                });
+                
+                // Array to track the ids of the details displayed rows
+                var detailRows = [];
+                $('#example1 tbody').on('click', 'tr td.details-control', function () {
+                    var tr = $(this).closest('tr');
+                    var Doc_No = parseFloat(tr.find("td:eq(1)").text());
+                    var cust = tr.find("td:eq(5)").text();
+                    var total = parseFloat(tr.find("td:eq(3)").text());
+                    var sent = tr.find("td:eq(8)").text();
+                    $("#btnBulk").removeAttr("disabled");
+                    $.ajax({
+                        async: true,
+                        type: 'GET',
+                        dataType: 'JSON',
+                        contentType: 'application/json; charset=utf-8',
+                        data: { id: Doc_No },
+                        url: "/OtDInvoice/getsupdetails",
+                        success: function (data) {
+                            format(data);
+                            $("#modalTitle").text('رقم السند : ' + Doc_No);
+                            $("#modalCustName").text('اسم العميل : ' + cust);
+                            $("#modalTotal").text('الإجمالي : ' + total);
+                            $("#sent").text(sent);
+                            $('#buttonmodal').trigger('click');
+                            $("#id-DocNo").text(Doc_No);                            
+                        },
+                        error: function () {
+                            alert("خطاء")
+                        }
+                    });
+
+                });
+
+                // Handle click on "Select all" control
+                $('#selectAll').on('click', function () {
+                    // Get all rows with search applied
+                    var rows = dt.rows({ 'search': 'applied' }).nodes();
+                    // Check/uncheck checkboxes for all rows in the table
+                    $('input[type="checkbox"]', rows).prop('checked', this.checked);
+                });
+                // Handle click on checkbox to set state of "Select all" control
+                $('#example1 tbody').on('change', 'input[type="checkbox"]', function () {
+                    // If checkbox is not checked
+                    if (!this.checked) {
+                        var el = $('#selectAll').get(0);
+                        // If "Select all" control is checked and has 'indeterminate' property
+                        if (el && el.checked && ('indeterminate' in el)) {
+                            // Set visual state of "Select all" control
+                            // as 'indeterminate'
+                            el.indeterminate = true;
+                        }
+                    }
+                });
+
+                $('#btnBulk').on('click', function (e) {
+                    const theButton = document.querySelector(".buttonload");
+                    theButton.classList.add("button--loading");
+                    var ids = [];
+                    var form = this;
+                    // Iterate over all checkboxes in the table
+                    dt.$('input[type="checkbox"]').each(function () {
+                        // If checkbox doesn't exist in DOM
+                        //if (!$.contains(document, this)) {
+                            // If checkbox is checked
+                            if (this.checked) {
+                                // Create a hidden element
+                                var s = parseInt(this.value);
+                                ids.push(s);
+                            }
+                        //}
+                    });
+                    
+                    $.ajax({
+                        async: true,
+                        type: 'POST',
+                        dataType: "html",
+                        contentType: 'application/json',
+                        data:JSON.stringify(ids),
+                        url: "/Trans/sendMultiOtDInvoice",
+                        success: function (data2) {
+                            //$("#sendButton").removeAttr("disabled");
+                            $('#ModalBody').html(data2);
+                            $('#myModal2').modal('show');
+                            dt.ajax.reload(null, false);
+                            theButton.classList.remove("button--loading");
+                        },
+                        error: function () {
+                            alert("خطاء")
+                        }
+                    });
+                    
+                });
+
+
+                $('#sendButton').on('click', function () {
+                    if ($("#sent").text() == "true") {
+                        alert("تم الدمج من قبل");    
+                        return;
+                    }
+                    var glId = $("#id-DocNo").text();
+                    $.ajax({
+                        async: true,
+                        type: 'GET',
+                        dataType: "html",
+                        contentType: 'application/json; charset=utf-8',
+                        data: { id: glId },
+                        url: "/Trans/sendOtDInvoice/" + glId,
+                        success: function (data2) {
+                            $('#ModalBody').html(data2);
+                            $('#myModal2').modal('show');
+                            dt.ajax.reload(null, false);
+                        },
+                        error: function () {
+                            alert("خطاء")
+                        }
+                    });
+                });
+
+                // On each draw, loop over the `detailRows` array and show any child rows
+                dt.on('draw', function () {
+                    $.each(detailRows, function (i, id) {
+                        $('#' + id + ' td.details-control').trigger('click');
+                    });
+                });
+            });
+        });
+    </script>
+}
+

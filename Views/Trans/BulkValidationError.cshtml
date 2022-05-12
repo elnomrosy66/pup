@@ -1,0 +1,38 @@
+﻿@model IEnumerable<H_Invoice.Models.InvTransList>
+@{
+    int count = Model.Count();
+    int faild = Model.Where(x => x.errors != null).Count();
+    int succeded = count - faild;
+
+}
+<h6>تم دمج عدد (@succeded) وفشل (@faild)</h6>
+@foreach (var row in Model)
+{
+    <p style="color:black; font-weight:bold;"><span>رقم المستند @row.Doc_No</span>| <span>رقم المخزن @row.BrId</span> | <span>الحالة : @row.Message</span></p>
+    if (row.errors != null)
+    {
+        <table class="table">
+            <tr >
+                <td>
+                    الرسالة
+                </td>
+                <td>
+                    المرجع
+                </td>
+                <th></th>
+            </tr>
+            @foreach (var item in row.errors)
+            {
+                <tr style="color:@item.Color">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Message)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Reference)
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+}
+

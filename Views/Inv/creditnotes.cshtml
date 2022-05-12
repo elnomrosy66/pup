@@ -1,0 +1,476 @@
+﻿@model IEnumerable<H_Invoice.Models.GLCODE>
+@{
+    ViewBag.Title = "إرسال إشعارات الخصم";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title">إرسال إشعارات الخصم</h1>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <div hidden class="container">
+            <label>من : </label>
+            <input type="date" name="begin"
+                   placeholder="dd-mm-yyyy" value=""
+                   min="1997-01-01" max="2030-12-31">
+            <label>إلي : </label>
+            <input type="date" />
+        </div>
+        <div class="container date-filter">
+            <label>من : </label>
+            <input class="form-control d-inline" type="text" id="min" name="min">
+            <label>إلي : </label>
+            <input class="form-control d-inline" type="text" id="max" name="max">
+        </div>
+        <select id="comboA" class="form-control">
+            <option value="all">الكل</option>
+            <option value="sent">مرسل</option>
+            <option value="notsent">غير مرسل</option>
+        </select>
+        <table id="example1" class="display table table-bordered table-hover  " style="width:100%">
+            <thead>
+                <tr>
+                    <th class="d-none"></th>
+                    <th>
+                        <label>الرقم</label>
+                    </th>
+                    <th>
+                        <label>التاريخ</label>
+                    </th>
+                    <th>
+                        <label>القيمة</label>
+                    </th>
+                    <th>
+                        <label>الجهة</label>
+                    </th>
+
+                    <th>
+                        <label>المصدر</label>
+                    </th>
+
+                    <th>
+                        <label>UUID </label>
+                    </th>
+                    <th>
+                        <label>الحالة </label>
+                    </th>
+                    <th>
+                        <label>عمليات </label>
+                    </th>
+
+                    @*<th></th>*@
+                </tr>
+            </thead>
+
+        </table>
+        <button hidden id="buttonmodal" class="fa fa-edit btn changeb" data-toggle="modal" data-target="#myModal" data-whatever="item.CATEGORY"></button>
+        <div class="modal fade bd-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="col-md-2">
+                            <h6 id="modalTitle"></h6>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 id="modalCustName"></h6>
+                        </div>
+                        <div class="col-md-2">
+                            <h6 id="modalTotal"></h6>
+                        </div>
+                        <div class="col-md-2  ">
+                            <button type="button" class="close float-left" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <input hidden type="text" id="id-DocNo" /><input hidden type="text" id="sent" />
+                            <table id="tableS7" class="display table table-bordered table-hover  " style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <td>
+                                            PARTNO
+                                        </td>
+                                        <td>
+                                            NAME
+                                        </td>
+                                        <td>
+                                            int_code
+                                        </td>
+                                        <td>
+                                            partname
+                                        </td>
+                                        <td>
+                                            QTY
+                                        </td>
+                                        <td>
+                                            PRICE
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="modalclose" type="button" class="btn btn-secondary" data-dismiss="modal">غلق</button>
+                        <button type="button" id="printButton" class="btn btn-primary" data-id="">طباعة</button>
+
+                        <button id="sendButton" type="button" class="button" onclick="this.classList.toggle('button--loading')">
+                            <span class="button__text">إرسال</span>
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div id="myModal2" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h6 class="modal-title">Responce Details</h6>
+                    </div>
+                    <div class="modal-body" id="ModalBody">
+
+                    </div>
+                    <div id="html1"></div>
+                    <div class="modal-footer">
+                        <button id="modal12close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- /.card-body -->
+</div>
+
+
+
+
+@section scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+    @Scripts.Render("~/jqueryDatatable/js")
+
+    <script src="~/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+
+        $(function () {
+            function format(d) {
+                //$("#tableS7 tr").remove();
+                $("#tableS7").children().remove()
+                var TblItems = $("#tableS7");
+                var row = "<thead><tr><td>الكود</td><td>الصنف</td><td>الكمية</td><td>السعر</td><td>الاجمالي</td></tr ></thead ><tbody>";
+                TblItems.append(row);
+                row = "";
+                jQuery.each(d, function (i, val) {
+                    row += '<tr>';
+                    jQuery.each(val, function (i, val2) {
+                        row += '<td>' + val2 + '</td>'
+                    });
+                    row += '</tr></tbody>'
+                    TblItems.append(row);
+                    row = "";
+                });
+            }
+            // Custom filtering function which will search data in column four between two values
+            $.fn.dataTable.ext.search.push(
+                function (settings, data, dataIndex) {
+                    var min = minDate.val();
+                    var max = maxDate.val();
+                    var date = new Date(data[2]);//column index
+
+                    if (
+                        (min === null && max === null) ||
+                        (min === null && date <= max) ||
+                        (min <= date && max === null) ||
+                        (min <= date && date <= max)
+                    ) {
+                        return true;
+                    }
+                    return false;
+                }
+            );
+
+            $(document).ready(function () {
+
+                //clone table header
+                $('#example1 thead tr')
+                    .clone(true)
+                    .addClass('filters')
+                    .appendTo('#example1 thead');
+
+                // Create date inputs
+                minDate = new DateTime($('#min'), {
+                    format: 'DD/MM/YYYY'
+                });
+                maxDate = new DateTime($('#max'), {
+                    format: 'DD/MM/YYYY'
+                });
+
+                var dt = $('#example1').DataTable({
+                    "processing": true,
+                    "serverSide": false,
+                    "ajax": {
+                        "url": "/inv/GetData3?flag=2&send=1",
+                        "type": "GET",
+                        "datatype": "json",
+                        "dataSrc": ""
+                    },
+                    "columns": [
+                        {
+                            "class": "details-control d-none",
+                            "orderable": false,
+                            "data": null,
+                            "defaultContent": "<i class='fa fa-plus'></i>"
+                        },
+                        { "data": "inv_no" },
+                        { "data": "dateTimeIssued", "type": "datetime", "render": function (data, type, full) { return (data) ? moment(data).format('YYYY/MM/DD') : ''; } },
+                        { "data": "totalAmount" },
+                        { "data": "recName" },
+                        { "data": "source" },
+                        { "data":"uuId"},
+                        { "data": "status" },
+                        {
+                            "class": "",
+                            "orderable": false,
+                            "data": null,
+                            "defaultContent": "<i class='details-control fa fa-eye'></i> | <i class='inv-print-pdf fas fa-file-pdf'></i> | <i hidden class='fas fa-undo'></i>"
+                        },
+
+                        //{
+                        //    "class": "send-control",
+                        //    "orderable": false,
+                        //    "data": null,
+                        //    "defaultContent": "<a onclick='SetBarcodeAndSer(this)' class='fa fa-envelope btn changeb' href='#exampleModal' data-toggle='modal' data-target='#exampleModal'></a>"
+                        //}
+                    ],
+
+                    "columnDefs": [
+                        { targets: 0, className: "ttxt" },
+                        { targets: 1, className: "ttxt" },
+                        { targets: 2, className: "ttxt" },
+                        { targets: 3, className: "ttxt" },
+                        { targets: 4, className: "ttxt" },
+                        { targets: 5, className: "ttxt" },
+                        { targets: 6, className: "ttxt" },
+                        { targets: 7, className: "ttxt" },
+                        { targets: 8, className: "ttxt" },
+
+
+                    ],
+                    "select": true,
+                    "responsive": false,
+                    "lengthChange": false,
+                    "autoWidth": true,
+                    "searching": true,
+                    "bPaginate": true,
+                    "pageLength": 15,
+                    "bInfo": false,
+                    "orderCellsTop": true,
+                    "fixedHeader": {
+                        header: true,
+                        footer: true
+                    },
+                    "order": [[0, "desc"]],
+                    "drawCallback": function () {
+                        $(".totalrows").text(this.api().page.info().recordsDisplay)
+                    },
+                    "initComplete": function () {
+                        var api = this.api();
+                        // For each column
+                        api.columns().eq(0).each(function (colIdx) {
+                            // Set the header cell to contain the input element
+                            var cell = $('.filters th').eq(
+                                $(api.column(colIdx).header()).index()
+                            );
+                            var title = $(cell).text();
+                            if (title != "")
+                                $(cell).html("<input type='text'  >");
+
+                            // On every keypress in this input
+                            $(
+                                'input',
+                                $('.filters th').eq($(api.column(colIdx).header()).index())
+                            )
+                                .off('keyup change')
+                                .on('keyup change', function (e) {
+                                    e.stopPropagation();
+
+                                    // Get the search value
+                                    $(this).attr('title', $(this).val());
+                                    var regexr = '({search})'; //$(this).parents('th').find('select').val();
+
+                                    var cursorPosition = this.selectionStart;
+                                    // Search the column for that value
+                                    api
+                                        .column(colIdx)
+                                        .search(
+                                            this.value != ''
+                                                ? regexr.replace('{search}', '(((' + this.value + ')))')
+                                                : '',
+                                            this.value != '',
+                                            this.value == ''
+                                        )
+                                        .draw();
+
+                                    $(this)
+                                        .focus()[0]
+                                        .setSelectionRange(cursorPosition, cursorPosition);
+                                });
+                        });
+                    },
+                    "language": {
+                        "url": "/translation/datatable-arabic.json"
+                    }
+                });
+                $("#example1_filter").hide();
+
+
+
+
+
+                // Refilter the table
+                $('#min, #max').on('change', function () {
+                    dt.draw();
+                });
+
+                $('#comboA').on('change', function () {
+                    //alert(this.value);
+                    //$('#DTcol-11').val(this.value);
+                    if (this.value == "sent") { dt.ajax.url("/inv/GetData3?flag=1&send=1").load(); }
+                    if (this.value == "notsent") { dt.ajax.url("/inv/GetData3?flag=1&send=0").load(); }
+                    if (this.value == "all") { dt.ajax.url("/inv/GetData3?flag=2&send=0").load(); }
+                });
+
+                //document.getElementById('ok_cancel').onclick = async function () {
+                //    let ret = await new BsDialogs({ backdrop: true }).ok_cancel('header', 'body')
+                //    console.log(ret)
+
+                // Array to track the ids of the details displayed rows
+                var detailRows = [];
+                $('#example1 tbody').on('click', 'tr td i.details-control', function () {
+
+                    var tr = $(this).closest('tr');
+                    var Doc_No = parseFloat(tr.find("td:eq(1)").text());
+                    var cust = tr.find("td:eq(4)").text();
+                    var total = parseFloat(tr.find("td:eq(3)").text());
+                    var sent = tr.find("td:eq(8)").text();
+
+                    $.ajax({
+                        async: true,
+                        type: 'GET',
+                        dataType: 'JSON',
+                        contentType: 'application/json; charset=utf-8',
+                        data: { id: Doc_No },
+                        url: "/Inv/getsupdetails2",
+                        success: function (data) {
+                            format(data);
+                            $("#modalTitle").text('رقم الفاتورة : ' + Doc_No);
+                            $("#modalCustName").text('اسم العميل : ' + cust);
+                            $("#modalTotal").text('الإجمالي : ' + total);
+                            $("#sent").text(sent);
+                            $('#buttonmodal').trigger('click');
+                            $("#id-DocNo").text(Doc_No);
+                        },
+                        error: function () {
+                            alert("خطاء")
+                        }
+                    });
+                });
+                $('#example1 tbody').on('click', 'tr td i.inv-print-pdf', function () {
+
+                    var tr = $(this).closest('tr');
+                    var sent = tr.find("td").eq(8).text();
+                    if (sent == "false") {
+                        alert("لم يتم الارسال من قبل");
+                        return;
+                    }
+                    var Doc_No = parseFloat(tr.find("td:eq(1)").text());
+
+                    window.open('/inv/PrintEInvoice/' + Doc_No, '_blank');
+                });
+
+                $('#printButton').on('click', function () {
+
+                    window.open('/inv/print/' + $("#id-DocNo").text(), '_blank');
+                });
+
+                //// trans data
+                $('#modalclose').on('click', function () {
+                    dt.ajax.reload(null, false);
+                    //$('#modalclose').trigger('click');
+                });
+                    $('#sendButton').on('click', function () {
+
+                    if ($("#sent").text() == "true") {
+                        alert("تم الارسال من قبل");
+                        theButton.classList.remove("button--loading");
+
+                        return;
+                    }
+                        const theButton = document.querySelector(".button");
+
+                           theButton.classList.add("button--loading");
+
+                    var glId = $("#id-DocNo").text();
+                    //window.location.href = '/inv/send?invoiceId=' + glId;
+                    $.ajax({
+                        async: true,
+                        type: 'GET',
+                        dataType: "html",
+                        contentType: 'application/json; charset=utf-8',
+                        data: { id: glId },
+                        url: "/inv/send?invoiceId=" + glId + "&resend=1",
+                        success: function (response) {
+                            if (response == "senttrue") {
+                                $('#ModalBody').html("الفاتورة مرسلة من قبل");
+                                theButton.classList.remove("button--loading");
+                                theButton.attr("disabled", true);
+                                return;
+                            }
+                            theButton.classList.remove("button--loading");
+                            $('#ModalBody').html(response);
+                            $('#myModal2').modal('show');
+                            dt.ajax.reload(null, false);
+                            //$('#myModal').modal('hide');
+                            //$('#modalclose').trigger('click');
+                            //$('#modal12close').trigger('click');
+                        },
+                        failure: function (response) {
+                            alert(response.responseText);
+                        },
+                        error: function (response) {
+                            alert(response.responseText);
+                        }
+
+                    });
+
+                });
+
+                // On each draw, loop over the `detailRows` array and show any child rows
+                dt.on('draw', function () {
+                    $.each(detailRows, function (i, id) {
+                        $('#' + id + ' td.details-control').trigger('click');
+                    });
+                });
+            });
+
+        });
+    </script>
+}
+
+

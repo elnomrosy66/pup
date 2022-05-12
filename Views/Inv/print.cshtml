@@ -1,0 +1,168 @@
+﻿@model IEnumerable<H_Invoice.Models.Einv2>
+@{
+    Layout = null;
+}
+
+@{
+    Double total = 0;
+    int n = 0;
+}
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>طباعة فاتورة</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+</head>
+<body>
+    <div class="wrapper" style="text-align :right;">
+        <!-- Main content -->
+        <section class="invoice" style="text-align :right;">
+            <!-- title row -->
+            <!-- /.col -->
+            <!-- info row -->
+
+            <div class="row invoice-info" style="border-style: solid; border-radius:10px; padding:5px; margin: 10px; justify-content:center; text-align:center;">
+                <div class="col-sm-4 invoice-col">
+
+                    <div><span id="coaddress-en">@TempData["name_ar"]</span> </div><br />
+                    <div><span id="cophone-en"></span>@TempData["addr_ar"] </div>
+
+
+                </div>
+
+                <div class="col-sm-4 invoice-col ">
+
+                    @{
+                       <img src="@ViewBag.ImageDataUrl" width="100" height="100" />
+                    }
+
+                </div>
+                <div class="col-sm-4 invoice-col">
+
+
+                    <div><span id="coaddress-en">@TempData["name_en"]</span> </div><br />
+                    <div><span id="cophone-en"></span>@TempData["addr_en"] </div>
+
+                </div>
+
+            </div>
+
+            <div class="container" style="align-content: center; text-align: center; max-width ">
+                <h5 style="border-right-style: solid; border-bottom-style: solid; padding: 10px; margin-right: 300px; margin-left: 300px; ">كشف حساب مريض بالمستشفي</h5>
+            </div>
+            <div class="row invoice-info">
+                <div class="col-sm-6 invoice-col">
+
+                    <div> مسلسل :  @ViewBag.Einv1.inv_no </div>
+                    <div> رقم الفاتورة : @ViewBag.Einv1.uuId</div>
+                    <div> التاريخ : @ViewBag.Einv1.dateTimeIssued</div>
+
+                </div>
+                <!-- /.col -->
+                <!-- /.col -->
+                <div class="col-sm-4 invoice-col">
+
+                    <div> اسم العميل : @ViewBag.Einv1.recName</div>
+                    <div> نوع الفاتورة : آجل</div>
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <!-- Table row -->
+            <div class="row">
+                <div class="col-12 table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>مسلسل</th>
+                                <th>رقم الصنف</th>
+                                <th>أسم الصنف</th>
+                                <th>الوحدة</th>
+                                <th>الكمية</th>
+                                <th>السعر</th>
+                                <th>الاجمالي</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@(n= n+1)</td>
+                                    <td>@item.itemCode</td>
+                                    <td>@item.description</td>
+                                    <td>@item.unitType</td>
+                                    <td>@item.quantity</td>
+                                    <td>@item.amountEGP</td>
+                                    <td>@(item.salesTotal)</td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+                <!-- accepted payments column -->
+                <!-- /.col -->
+                <div class="col-6">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tr>
+                                <th>الصافي :</th>
+                                <td>@ViewBag.Einv1.netAmount</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- ./wrapper -->
+    <!-- Page specific script -->
+    @Scripts.Render("~/jqueryDatatable/js")
+
+    <script>
+       
+
+        $(document).ready(function () {
+            //window.print()
+        });
+
+        $.ajax({
+            async: true,
+            type: 'GET',
+            dataType: 'JSON',
+            contentType: 'application/json; charset=utf-8',
+            
+            url: "/company/Getdata",
+            success: function (data) {
+                
+            },
+            error: function () {
+                alert("خطاء")
+            }
+
+        });
+        
+
+
+    </script>
+</body>
+</html>
+

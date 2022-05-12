@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "تعديل تاريخ فاتورة";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title">تعديل تاريخ فاتورة</h1>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <div class="col-12">
+            
+            <input  id="inv_no" name="inv_no" class="form-control d-inline" type="text" placeholder="ادخل رقم الفاتورة" value="@ViewBag.old_date" /> -
+            <input id="newdate" name="newdate" class="form-control d-inline datetimepicker5" type="text" placeholder="اختر التاريخ الجديد" />
+            <input id="submit" name="in_no" class="btn btn-success d-inline " type="submit" value="حفظ التعديل" />
+            <button id="new" style="display:none;" class="btn btn-outline-primary">تعديل فاتورة جديدة</button>
+            <br /><br /><br /><br />
+        </div>
+    </div>
+    <!-- /.card-body -->
+</div>
+
+@section scripts {
+    @Scripts.Render("~/jqueryDatatable/js")
+    <script>
+        $(document).ready(function () {
+            var Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            $("#submit").on('click', function () {
+                var inv_no = $("#inv_no").val();
+                var newdate = $("#newdate").val();
+                if (inv_no == "") {
+                    alert("ادخل بيانات الفاتورة");
+                    return;
+                }
+                $.ajax({
+                    async: true,
+                    type: 'GET',
+                    dataType: 'JSON',
+                    contentType: 'application/json; charset=utf-8',
+                    data: { newdate: newdate, inv_no: inv_no },
+                    url: "/inv/submitinvchangedate?inv_no=" + inv_no + "&newdate=" + newdate,
+                    success: function (data) {
+                        alert(data);
+                        var x = document.getElementById("new");
+                        if (x.style.display === "none") {
+                            x.style.display = "inline";
+                            document.getElementById("submit").disabled = true;
+                            $("#inv_no").val("");
+                            $("#newdate").val("")
+                        } 
+                    },
+                    error: function () {
+                        alert("خطاء في الاتصال")
+                    }
+                });
+            });
+            $("#new").on('click', function () {
+                document.getElementById("submit").disabled = false;
+                document.getElementById("new").style.display = "none";
+
+            });
+        });
+    </script>
+
+}
